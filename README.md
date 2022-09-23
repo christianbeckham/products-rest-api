@@ -4,6 +4,10 @@
 
 A Django REST API backend project to create a browsable Web API.
 
+## Usage
+
+Uses [pipenv](https://github.com/pypa/pipenv) to create a virtual environment and manage project workflow.
+
 ## Technologies
 
 - [Django](https://www.djangoproject.com)
