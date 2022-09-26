@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Review
 from .serializers import ReviewSerializer
+from products.models import Product
 
 # Create your views here.
 
@@ -12,6 +13,10 @@ from .serializers import ReviewSerializer
 def reviews_list(request):
     if request.method == 'GET':
         reviews = Review.objects.all()
+        # query_param to test retrieving all reviews by specific product
+        # product_id_param = request.query_params.get('product_id')
+        # if product_id_param:
+        #     reviews = reviews.filter(product__id=product_id_param)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -35,3 +40,12 @@ def reviews_detail(request, pk):
     elif request.method == 'DELETE':
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def product_reviews(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    product_reviews = Review.objects.select_related(
+        'product').filter(product=product)
+    serializer = ReviewSerializer(product_reviews, many=True)
+    return Response(serializer.data)
